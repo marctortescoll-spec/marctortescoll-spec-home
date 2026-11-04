@@ -1,9 +1,9 @@
 # Kaenori Experience — La casa que te entiende
-## Documento rector de producto · v1.3 (propuesta consolidada) · Noviembre 2026
+## Documento rector de producto · v1.3 (congelación funcional aprobada por OWNER) · Noviembre 2026
 
-**Programa:** KAENORI-HOME00X-AUTONOMY · **Owner:** Marc · **Estado:** propuesta V1.3 (A0), pendiente
-de **aprobación expresa del propietario**. **No autoriza** implementación, cambios de Core, pruebas
-físicas ni despliegues.
+**Programa:** KAENORI-HOME00X-AUTONOMY · **Owner:** Marc · **Estado:** V1.3 — **Congelación funcional
+aprobada por OWNER** (2026-11-04). **No autoriza** implementación, cambios de Core, pruebas físicas ni
+despliegues.
 
 ---
 
@@ -209,19 +209,17 @@ Las 12 modificaciones, con la **recomendación del concilio** (la **aprobación 
 
 ---
 
-## 13. Aprobación del propietario (gate, pendiente)
+## 13. Aprobación del propietario (RESUELTO — 2026-11-04)
 
-El propietario marca por número **aceptar / cambiar / quitar**. Los bloqueantes (1, 2, 3, 4, 7, 9)
-protegen invariantes; rechazarlos exige redefinir la regla, no "saltársela".
+El propietario **aprobó** los 12 puntos conforme a las recomendaciones consolidadas del concilio:
 
-```
-1 [ ] aceptar [ ] cambiar [ ] quitar (bloqueante)   7 [ ] aceptar [ ] cambiar [ ] quitar (bloqueante)
-2 [ ] aceptar [ ] cambiar [ ] quitar (bloqueante)   8 [ ] aceptar [ ] cambiar [ ] quitar
-3 [ ] aceptar [ ] cambiar [ ] quitar (bloqueante)   9 [ ] aceptar [ ] cambiar [ ] quitar (bloqueante)
-4 [ ] aceptar [ ] cambiar [ ] quitar (bloqueante)  10 [ ] aceptar [ ] cambiar [ ] quitar
-5 [ ] aceptar [ ] cambiar [ ] quitar                11 [ ] aceptar [ ] cambiar [ ] quitar
-6 [ ] aceptar [ ] cambiar [ ] quitar                12 [ ] aceptar [ ] cambiar [ ] quitar
-```
+- **Aceptar:** 1, 2, 3, 4, 6, 7, 9, 12.
+- **Aceptar con las modificaciones acordadas:** 5 (contexto adicional: solo cuando sea necesario) y 8
+  (Tranquilidad como objetivo transversal).
+- **Aceptar con la priorización y fases acordadas:** 10 (offline/reanudación → P0) y 11
+  (hogar/usuarios/zonas en 2 fases: Admin+Habitante → roles en P2/P3).
+
+Los bloqueantes (1, 2, 3, 4, 7, 9) quedan **aprobados y protegidos como invariantes**.
 
 ---
 
@@ -248,7 +246,7 @@ propuestas aceptadas/descartadas. **Seguridad: cero actuaciones físicas no auto
   de datos/LLM, Anexo C (trazabilidad); tras ronda 7 y validación ronda 8.
 - **V1.3** (2026-11-04): añade **Anexo D** (Experiencia de Cliente y Comportamiento de Liloo); mantiene
   Anexos A y C vigentes. No reabre decisiones de V1.2 salvo contradicción demostrable de seguridad,
-  privacidad o viabilidad.
+  privacidad o viabilidad. **Congelación funcional aprobada por OWNER (2026-11-04).**
 
 *Documento rector de producto (A0). No autoriza desarrollo, escaneo, despliegue ni cambios de ADR. La
 congelación definitiva V1.3 requiere aprobación expresa del propietario.*

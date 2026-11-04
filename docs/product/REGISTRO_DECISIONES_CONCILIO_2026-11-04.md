@@ -2,7 +2,15 @@
 ## Consolidado · Anexo de "Kaenori Experience v1.3" · 2026-11-04
 
 **Naturaleza:** registro único y cronológico de las decisiones del concilio (DeepSeek + GPT-5 +
-Argon). Sustituye a los dictámenes sueltos de las rondas 4–9, que quedan como histórico.
+Argon). Sustituye a los dictámenes sueltos de las rondas 4–10, que quedan como histórico.
+
+## Aprobación del propietario — Congelación funcional V1.3 (2026-11-04)
+
+El propietario **aprueba** la congelación funcional de V1.3 (rector + anexos A, B, C, D) y los 12
+puntos del §13: **aceptar** 1, 2, 3, 4, 6, 7, 9, 12 · **aceptar con modificaciones** 5 y 8 · **aceptar
+con priorización/fases** 10 y 11. **No se reabre la estrategia** salvo contradicción demostrable de
+seguridad, privacidad o viabilidad. Siguiente mandato: **auditoría integral del desarrollo** (A0, sin
+código).
 
 ---
 
