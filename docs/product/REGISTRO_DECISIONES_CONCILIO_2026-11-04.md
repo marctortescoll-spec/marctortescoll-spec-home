@@ -74,6 +74,16 @@ código).
 - **Ajustes aplicados** al Anexo D y al Anexo B (referencia a V1.3). Nota Anexo A: «Revertir»/kill-switch
   no garantiza retorno físico; Liloo comunica qué parte verificó.
 
+## Ronda 11 — Validación de la organización de la Auditoría Global (2026-11-04)
+
+- **Veredicto:** lista-con-ajustes (GPT-5 y Argon).
+- **Ajustes incorporados:** pinning de hashes (SHA por repo en minuto cero) · `evidencia/` también en el
+  repo remoto · escalera de evidencia read-only (probado/integrado = existencia de tests/CI previos) ·
+  independencia (extractos crudos + revisión cruzada) · anti-silos (contratos de frontera Core↔EMS) ·
+  rúbrica y criterios de salida por recorrido · scope-freeze + rama protegida + no-PII.
+- **Resultado:** rama `audit/global-v1.3` en el repo documental + worktrack `_audit_global_v1_3_2026-11-04/`;
+  **Fase 0 (inventario) completada** (línea base de SHAs fijada).
+
 ## Decisiones finales consolidadas (las 12 modificaciones)
 
 | # | Ref | Decisión del concilio | Bloqueante |
