@@ -19,29 +19,37 @@ elimina ni depreca código.**
 | `home_discovery_source/` | `ems.py`, `ems_service.py` | `energy_opportunity`, `cold_water_setpoint`, `hot_water_setpoint` | en `tests/` |
 | `home_ems/` | `shadow.py`, `service.py`, `reader.py`, `plan.py`, `permission.py`, `models.py`, `math.py`, `contract.py` | EmsShadow (proposals), matemática, permisos | sin consumidores; tests a localizar |
 
-## 3. Matriz de equivalencia funcional y de contratos
+## 3. Matriz de equivalencia funcional y de contratos (CORREGIDA por 07-auditor)
 
-| Capacidad | `home_discovery_source` | `home_ems` | Equivalencia |
-|---|---|---|---|
-| Oportunidad energética (escalar) | `energy_opportunity` | `oportunidad_energetica` (service.py) | a verificar |
-| Consignas ACS (frío/calor) | `cold/hot_water_setpoint` | — | exclusiva discovery_source |
-| Shadow Mode (propuestas tipadas) | — | `shadow.py` | exclusiva home_ems |
-| Matemática tarifa→precio→consigna | — | `math.py`, `plan.py` | exclusiva home_ems |
-| Permisos EMS | — | `permission.py` | exclusiva home_ems |
+**Ambos módulos contienen la MISMA matemática y las MISMAS consignas** (implementaciones paralelas):
 
-*(preliminar; la matriz definitiva se rellena en A1 con evidencias de contrato)*
+| Función | `home_discovery_source/ems.py` | `home_ems/math.py` |
+|---|---|---|
+| Tarifa → precio | `tariff_period`, `current_price` | `periodo_actual`, `precio_actual` |
+| Oportunidad energética | `energy_opportunity` | `oportunidad_energetica` |
+| Consigna ACS frío / calor | `cold_water_setpoint` / `hot_water_setpoint` | `consigna_agua_frio` / `consigna_agua_calor` |
+| Demanda/modo térmico | `thermal_mode`, `thermal_demand`, `heating_demand_zone` | `modo_termico`, `demanda_termica`, `demanda_calor_zona`, `fase_calor` |
+| Capa de servicio | `ems_service.py` (`ems_decision`, `make_handler`) | `service.py` (`ems_decision`, `make_handler`) |
 
-## 4. Diferencias y capacidades exclusivas
+**Capacidades exclusivas reales de `home_ems`** (superset): modelos tipados (`models.py`), **EmsShadow**
+(`shadow.py`), **PDP/permisos** (`permission.py`), **planificación** (`plan.py`), lector tipado
+(`reader.py`), contrato (`contract.py`).
 
-- `home_discovery_source`: integrada (catálogo/observación), consignas ACS, escalar de oportunidad.
-- `home_ems`: Shadow tipado + matemática completa + permisos, pero **no conectada** a consumidores.
+## 4. Hallazgo crítico: **ningún motor EMS tiene consumidor externo ni servicio**
 
-## 5. Recomendación de canónico (basada en evidencias)
+- `pyproject.toml` solo expone `kaenori-discovery`; **no hay entry point** de `home_ems` ni
+  `home_discovery_source.ems_service`.
+- Ninguna unidad systemd arranca EMS.
+- Los "consumidores" de `home_discovery_source` importan submódulos de **discovery** (`catalog_store`,
+  `consent`, `identification`…), **no** `ems`. El motor EMS está **codificado pero no conectado** (a la
+  espera de la futura capa de Oportunidades).
 
-**Preliminar:** consolidar sobre **`home_ems`** (capacidad más completa: Shadow + matemática + permisos)
-**reutilizando** las funciones de consigna/oportunidad de `home_discovery_source`, y re-cablear los 4
-consumidores. Alternativa a confirmar en A1: migrar a `home_discovery_source` si la equivalencia y el
-coste de re-cableado lo justifican. **Decisión final solo tras la matriz de equivalencia (A1).**
+## 5. Recomendación de canónico (CORREGIDA)
+
+**`home_ems` es el candidato canónico** (superset: matemática + Shadow + PDP + plan + lector tipado). La
+migración: (1) validar equivalencia con golden cases contra `home_discovery_source/ems.py`; (2) **no
+eliminar nada en P0.3**; (3) retirar `home_discovery_source/ems.py`+`ems_service.py` solo en un paquete
+posterior con autorización específica. **Decisión final tras la matriz de equivalencia (A1).**
 
 ## 6. Estrategia de migración progresiva y reversible
 
