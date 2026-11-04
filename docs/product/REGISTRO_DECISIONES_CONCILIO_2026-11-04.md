@@ -2,7 +2,7 @@
 ## Consolidado · Anexo de "Kaenori Experience v1.2" · 2026-11-04
 
 **Naturaleza:** registro único y cronológico de las decisiones del concilio (DeepSeek + GPT-5 +
-Argon). Sustituye a los dictámenes sueltos de las rondas 4–8, que quedan como histórico.
+Argon). Sustituye a los dictámenes sueltos de las rondas 4–9, que quedan como histórico.
 
 ---
 
@@ -45,6 +45,18 @@ Argon). Sustituye a los dictámenes sueltos de las rondas 4–8, que quedan como
 - **Ajustes aplicados:** desopacar la tabla §12 (descripción resumida) · "riego/piscina (previsto en
   P3)" · estados explícitos del Anexo C (implementado/parcial/pendiente/bloqueado) · nota ha-adapter →
   CCR Clase B por defecto si no se demuestra TTL nativo.
+
+## Ronda 9 — Anexo D (Experiencia de Cliente y Comportamiento de Liloo) (2026-11-04)
+
+- **Veredicto:** aprueba-con-cambios (GPT-5 y Argon).
+- **6 dimensiones evaluadas:** coherencia estratégica · experiencia de cliente · viabilidad conceptual ·
+  seguridad y confianza · consistencia documental · calidad de producto → todas cumplen (con matices).
+- **Ajustes aplicados al Anexo D:** voz/micrófono ↔ niveles de privacidad (Nivel 0/1/2) · "alertas
+  críticas" = solo Life Safety (el resto respeta horas de silencio) · "descarto ese supuesto" (no
+  "ajusto el modelo") · corte de internet = mensaje local predefinido en el borde · confirmación
+  explícita al traducir lenguaje natural a límites · dependencias añadidas: identidad/rol en canales
+  compartidos, ontología para "agrupados por función", auditoría/aviso cuando un Habitante pausa o
+  cancela una prueba.
 
 ## Decisiones finales consolidadas (las 12 modificaciones)
 
