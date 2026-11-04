@@ -1,42 +1,42 @@
-# DECISIÓN ARQUITECTÓNICA PROPUESTA — Recuperación segura frente al kill-switch
-## Ronda 14 · para votación del concilio
+# DECISIÓN ARQUITECTÓNICA — Recuperación segura frente al kill-switch
+## Ronda 14 · propuesta para votación
+
+**Estado:** propuesta A0; **no implementada**.
 
 ## Problema
 
-El kill-switch (`home_security/killswitch.py` + `policy.py`) es **fail-closed y deny-all**: armado,
-deniega **toda** acción. Si se implementa la recuperación física (CCR) como una orden más, el
-kill-switch armado **la bloquearía**, impidiendo devolver un equipo a su estado seguro.
+`KillSwitch` armado implica deny-all (`policy.py:68-70`). Si la recuperación
+física se implementa como una orden normal, el kill-switch la bloquea. No se
+acepta un bypass general.
 
-## Criterios (del mandato)
-
-No aceptar un *bypass* general sin análisis de amenazas. Preservar invariantes de Core, permisos y
-clasificación CCR. Separar riesgos actuales de vulnerabilidades que solo aparecerían al habilitar
-actuación futura.
-
-## Opciones evaluadas
+## Opciones
 
 | Opción | Mecanismo | Riesgo | Veredicto |
 |---|---|---|---|
-| **A. Bypass privilegiado general** | Un canal que salta el kill-switch para cualquier comando | Alto: rompe deny-by-default; cualquier invocador lo usaría | **Rechazar** |
-| **B. Recuperación autónoma del dispositivo (CCR Clase A)** | El equipo tiene TTL/dead-man nativo y vuelve solo a estado seguro al perder contacto | Bajo (no depende de Kaenori); solo Clase A | **Preferir siempre que exista** |
-| **C. Safe-stop acotado (kill-switch en dos fases)** | Al armar kill-switch: 1º "stop-new" (deniega nuevas), 2º "safe-stop" emite **solo** comandos *revert-only* de una lista blanca auditada, durante la transición de cierre | Medio (bounded, auditable); no es bypass general | **Recomendado para Clase B** |
-| **D. Watchdog local + heartbeat** | Watchdog detecta pérdida de conexión y dispara el revert | Requiere canal de envío (misma colisión) | Complemento, no solución |
+| A. Bypass general | Saltar policy/kill-switch para cualquier orden | Alto; rompe deny-by-default | **Rechazar** |
+| B. CCR Clase A | TTL/dead-man nativo del dispositivo; vuelve solo a estado seguro | Bajo; no depende de Kaenori | **Preferir** |
+| C. Safe-stop acotado Clase B | Transición `stop-new` → `safe-stop` con lista blanca revert-only, auditoría y timeout | Medio; solo durante transición viva | **Aceptar con matices** |
+| D. Watchdog local | Heartbeat + revert | Necesita canal; no resuelve pérdida de red | Complemento |
 
-## Propuesta (a votar)
+## Propuesta
 
-1. **No** crear un *bypass* general sobre `AuthorizationPolicy`/kill-switch.
-2. **CCR Clase A** (recuperación autónoma por TTL de hardware) es la vía preferente: no necesita
-   canal Kaenori. Verificar evidencia real por dispositivo antes de habilitar actuación.
-3. **CCR Clase B**: implementar **safe-stop acotado** — un paso del kill-switch que, **solo** durante la
-   transición de cierre y **solo** sobre una lista blanca de acciones *revert-only* (restaurar consigna/
-   modo/estado previo), emite los comandos de retorno y los audita. Nunca un permiso abierto.
-4. El safe-stop hereda **permisos + límites + auditoría** de Core; no eleva privilegios del invocador.
+1. **No bypass general.**
+2. **CCR Clase A preferente**; verificar TTL/read-back por dispositivo antes de
+   habilitar actuación.
+3. **Clase B**: safe-stop acotado, **solo** durante transición de cierre, lista
+   blanca revert-only, estado seguro **estático** (no “estado previo”), timeout
+   duro, idempotente, auditado y con permisos normales (sin elevar al invocador).
+4. Si Clase B no tiene fallback hardware (relé/TTL), **solo actuación
+   supervisada**; no desatendida para seguridad.
 
 ## Riesgos actuales vs futuros
 
-- **Actual (hoy, sin actuación habilitada):** kill-switch solo-lectura es suficiente; no hay actuación
-  en producción, por lo que la colisión es **latente**, no explotable.
-- **Futuro (al habilitar actuación):** la colisión se vuelve real; por eso CCR + safe-stop acotado deben
-  implementarse **antes** de habilitar cualquier actuación.
+- **Hoy:** no hay actuación habilitada en producción; la colisión es latente.
+- **Al habilitar:** sin CCR/safe-stop, la recuperación puede ser imposible.
+- **Clase B sin hardware:** no cubre pérdida de red, alimentación ni caída de
+  proceso; no debe prometerse como garantía física.
 
-*Documento A0 para votación del concilio. No autoriza implementación.*
+## Invariantes
+
+Core v1.0, permisos, CCR, deny-by-default, auditoría y clasificación de acciones
+se preservan. El safe-stop no eleva privilegios ni crea un canal abierto.

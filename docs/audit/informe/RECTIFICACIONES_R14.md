@@ -1,25 +1,36 @@
 # INFORME DE RECTIFICACIONES — Ronda 14
-## Contraste técnico de la Auditoría Global V1.3
+## Contraste técnico independiente · `home @ 549700b9`
 
-**Fuente:** `home @ 549700b9` (canónica) · A0 solo lectura · contrasta y corrige el informe global
-(commit `463d996`).
+**Autoridad:** A0, solo lectura. **No** modifica producto, permisos ni despliegue.
+**Fuente:** `home @ 549700b9c25c2336af8f699cbc1cf1270145fc96`.
+**Contrasta:** Auditoría Global V1.3 (documental `463d996`).
 
-## Tabla de rectificaciones (afirmación → evidencia → corrección)
+## Tabla de rectificaciones
 
-| # | Afirmación original (auditoría) | Evidencia encontrada (549700b9) | Conclusión corregida | Efecto en el plan |
+| # | Afirmación original | Evidencia encontrada | Corrección | Efecto |
 |---|---|---|---|---|
-| 1 | "Conectores solo-lectura → no hay capacidad de escritura" | `home_ha_adapter_core/action_executor.py` implementa `HomeActionExecutor` (POST `/api/services/<domain>/<service>` a HA, solo acciones declaradas en `ActionRegistry`, `verified` solo con read-back). `state_reader.py`, `client.py`, `domain_catalog.py`, `registry.py` presentes | **Sí existe capacidad de escritura codificada**, vía HA, con deny-by-default y verificación por read-back | El piloto sí tiene vía de actuación; el bloqueo real es **CCR/recuperación**, no la ausencia de escritura |
-| 2 | "Egress declarativo, sin enforcement" | `home_security/apply_egress.py` aporta `render_ruleset` → `compile_nftables` → `write_ruleset` → `apply_ruleset` (`nft -f`, A3, con snapshot/rollback). Tests: `tests/test_security_egress.py`, `test_egress_compile.py`, `test_apply_egress.py`. Unit `kaenori-egress.service` | **El enforcement está codificado** (camino nftables), pero exige **A3 (root + nft)** y **no hay evidencia de aplicación efectiva** | Ajustar de "no implementado" a "implementado sin verificar (A3)" |
-| 3 | "Backup sin test dedicado" | `tests/test_backup.py` existe | **Sí hay test de backup** | Eliminar esa carencia del registro |
-| 4 | "203 ficheros de test" | Recontado sobre 549700b9: `tests/*.py`=132 · `tests_bdm/*.py`=34 · `core/tests/*.py`=8 · `factory/tests`=6 → **180** (mi "203" contaba ficheros no-.py). `ci.yml` ejecuta **solo `pytest tests/`** (132); deja fuera `tests_bdm/`, `core/tests/` y `factory/tests` | **La cifra correcta es ~180**, y **el CI solo ejecuta 132** (tests/), no toda la suite | Revisar el CI para cubrir tests_bdm/core/factory |
-| 5 | "12 categorías en `home_connectivity/vocabulary.py`" | `CATEGORY_KEYWORDS` (12) está en **`home_onboarding/vocabulary.py`** (y `home_scout/conversation/categories.py`); `home_connectivity/vocabulary.py` es otro vocabulario (conectividad) | **Corregir la ruta**: la taxonomía técnica vive en `home_onboarding/vocabulary.py` | — |
-| 6 | "Duplicación `home_ems` vs `home_discovery_source/ems.py`" | `home_discovery_source` es consumido por 4 módulos (`home_node/catalog_service.py`, `home_connectivity/discovery_bridge.py`, `home_catalog/observation.py`, `core/home_experience/brain.py`); `home_ems` **no tiene consumidores** en esta rama | **`home_discovery_source` es el activo; `home_ems` parece muerto/paralelo.** La consolidación debe decidir cuál es el canónico | Consolidar a favor de `home_discovery_source` o reconectar `home_ems` |
+| 1 | “Conectores solo-lectura; no hay capacidad de escritura” | `home_ha_adapter_core/action_executor.py:51-85` implementa `HomeAssistantActionExecutor`; `home_node/composition.py:238-264` lo cablea en `CoreService`; `kaenori-node.service` ejecuta `home_node` | **Sí hay actuación codificada e integrada** vía HA. `kaenori-ha-adapter.service` es el adaptador de telemetría read-only; no es el executor | El bloqueo es CCR/gate, no ausencia de escritura |
+| 2 | “Egress declarativo, sin enforcement” | `home_security/egress.py:8-11` declara `is_enforced=False`; `apply_egress.py:49-51` ejecuta `nft -f`; `kaenori-egress.service:14-18` aplica y **borra la tabla al parar** | **Enforcement codificado, no verificado en hierro**; sin snapshot/rollback real; stop = fail-open; sin persistencia tras reboot | Pasa a “implementado sin verificación A3”; añadir rollback/persistencia |
+| 3 | “Backup sin test dedicado” | `tests/test_backup.py` existe; prueba backup/verify/restore dry-run+real | **Sí hay test**, pero **no cubre fallo de creación** | Ver rectificación 7 |
+| 4 | “203 ficheros de test” | `tests/*.py`=132, `tests_bdm/*.py`=34, `core/tests/*.py`=8, `deployment/factory/tests/*.sh`=6 → **180**; `pytest --collect-only` da **1569 + 879 + 85 = 2533** casos | **180 ficheros; 2533 casos**. CI ejecuta solo `tests/` = **1569**; quedan fuera **964 (38,1 %)** | Corregir cifra y ampliar CI |
+| 5 | “12 categorías en `home_connectivity/vocabulary.py`” | `home_onboarding/vocabulary.py:144-157` define `CATEGORY_KEYWORDS` (12); `home_connectivity/vocabulary.py` es otro vocabulario | **Ruta corregida**: taxonomía en `home_onboarding/vocabulary.py` | Sin cambio de alcance |
+| 6 | “Duplicación `home_ems` vs `home_discovery_source/ems.py`” | `home_discovery_source` es importado por `home_node/catalog_service.py`, `home_connectivity/discovery_bridge.py`, `home_catalog/observation.py`, `core/home_experience/brain.py`; `home_ems` no tiene consumidores externos | **`home_discovery_source` es el activo**; `home_ems` parece muerto/paralelo | Consolidar a favor del activo, con deprecación segura |
+| 7 | “Backup con test = backup fiable” | `backup.sh:30,34` usa `tar ... 2>/dev/null || true`; con `data` vacío devuelve **rc=0**, archivo de **45 bytes**, `backup-verify.sh` devuelve **OK** | **Un backup incompleto puede declararse satisfactorio.** El test no cubre `tar` fallido | **P0**: quitar `|| true`, comprobar `tar`, validar contenido/manifest y añadir test de fallo |
+| 8 | “Bug de clima: compara modo con `expected_state`” | `domain_catalog.py:125-137` declara `climate.set_temperature` y `set_hvac_mode` con `expected_state=None`; `action_executor.py:74-84` envía primero y, si no hay `expected_state`, devuelve `verification_unavailable` | **No compara modo**: no verifica nada y **la orden ya salió**. Además `set_brightness` verifica solo `on`, no el nivel; `set_position`/`set_volume` no verifican el atributo | **No confundir `verified=False` con ausencia de efecto**; corregir read-back por atributo |
+| 9 | “Safe-stop/kill-switch implementado” | `home_security/killswitch.py:68-75` solo `arm/disarm`; `policy.py:68-70` deny-all al armar; no hay máquina de estados CCR ni safe-stop | **No implementado**; solo flag deny-all | La recuperación segura es propuesta, no funcionalidad |
 
-## Confirmado (sin rectificación)
+## Confirmado sin rectificación
 
-- Proyección 12→5 verticales de producto: **NO codificada** (grep de los 5 nombres de vertical = vacío).
-- CCR / Override / Oportunidades (Anexo A): **NO codificados** (solo especificación).
-- Kill-switch solo bloquea nuevas órdenes: **confirmado**.
-- Instalación real: **NO VERIFICADA** (manifiesto "NO ejecutado").
+- Proyección 12→5: **no codificada**.
+- CCR/Override/Oportunidades: **no codificados**; solo especificación.
+- Kill-switch armado: **deny-all**; no hay bypass.
+- Instalación real/aislamiento efectivo: **NO VERIFICADO**.
+- Cifra 203: incorrecta; usar 180 ficheros/2533 casos.
 
-*Informe A0. No autoriza desarrollo, despliegue ni actuación.*
+## Evidencia reproducible
+
+- `python3 -m pytest tests/ tests_bdm/ core/tests/ --collect-only` → 2533.
+- `backup.sh` con directorio vacío → rc=0, 45 bytes, verify OK (prueba de fallo silencioso).
+- `git show 549700b9:...` para cada archivo citado.
+
+*Documento A0. No autoriza implementación ni despliegue.*

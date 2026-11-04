@@ -1,14 +1,15 @@
-# MATRIZ DE TRAZABILIDAD CORREGIDA — R14 (deltas sobre la matriz auditada)
-## Solo filas corregidas tras el contraste técnico
+# MATRIZ DE TRAZABILIDAD CORREGIDA — R14
 
-| Capacidad | Impl corregida | Valid corregida | Evidencia | Nota |
-|---|---|---|---|---|
-| Capacidad de actuación (escritura) | 🟢 (era ⚪) | cod | `home_ha_adapter_core/action_executor.py` (HomeActionExecutor, HA services, ActionRegistry, read-back) | No "solo-lectura"; el bloqueo real es CCR |
-| Egress jail | 🟡→🟡 (matiz) | cod + tst | `apply_egress.py` (nftables) + `tests/test_egress_compile.py`, `test_apply_egress.py`, `test_security_egress.py` | Enforcement codificado, requiere A3; no verificado |
-| Backup | 🟢 (era 🟡) | cod + tst | `deployment/factory/scripts/backup*.sh` + `tests/test_backup.py` | Sí hay test |
-| Suite de tests | 180 ficheros (era 203) | cod (no ejecutada) | `tests/*.py`=132 · `tests_bdm/*.py`=34 · `core/tests/*.py`=8 · `factory/tests`=6 | CI solo ejecuta `pytest tests/` (132) |
-| Taxonomía 12 categorías | 🟢 | cod | **`home_onboarding/vocabulary.py`** (`CATEGORY_KEYWORDS`) | Corregida la ruta (no home_connectivity) |
-| EMS (activo) | 🟢 | cod + int | **`home_discovery_source/`** (consumido por 4 módulos) | `home_ems/` sin consumidores (a consolidar) |
-| Proyección 12→5 | ⚪ | doc | (no codificado) | sin cambio |
+**Base:** `home @ 549700b9`. **Solo filas corregidas**; la matriz completa sigue en
+`MATRIZ_TRAZABILIDAD_AUDITADA.md`.
 
-*Matriz delta A0. La matriz completa vigente sigue siendo `MATRIZ_TRAZABILIDAD_AUDITADA.md`.*
+| Capacidad | Implementación | Tests | Integración | Evidencia | Estado |
+|---|---|---|---|---|---|
+| Actuación HA | `HomeAssistantActionExecutor` (`action_executor.py:51-85`) | `tests/test_ha_adapter_core.py` (envío, deny, verificación) | `home_node/composition.py:238-264` + `kaenori-node.service` | Código + tests | 🟢 cod+int; 🟡 verificación por atributo |
+| Egress jail | `egress.py`, `egress_compile.py`, `apply_egress.py` | `test_security_egress.py`, `test_egress_compile.py`, `test_apply_egress.py` | `kaenori-egress.service` | Tests; sin aplicación OS | 🟡 cod+tst; ❌ enforcement verificado |
+| Backup | `backup.sh`, `backup-verify.sh`, `backup-restore.sh` | `tests/test_backup.py` | scripts de fábrica | Test verde; prueba vacía rc=0 | 🟡 test; ❌ fallo incompleto |
+| Suite/CI | 132+34+8 `.py` + 6 `.sh` = **180** | **2533** casos pytest; 6 shell | CI solo `tests/` (1569) | `pytest --collect-only`; `ci.yml` | 🟡 38,1 % fuera de CI |
+| Taxonomía 12 | `home_onboarding/vocabulary.py:144` | tests de onboarding | consumidores | Código | 🟢 |
+| EMS activo | `home_discovery_source` | tests propios | 4 consumidores | grep | 🟢; `home_ems` sin consumidores |
+| Proyección 12→5 | — | — | — | no código | ⚪ no codificada |
+| Kill-switch recovery | `killswitch.py` arm/disarm; `policy.py` deny-all | tests de policy | — | sin CCR/safe-stop | ❌ no implementado |
