@@ -66,8 +66,9 @@ _audit_global_v1_3_2026-11-04/        (local, worktrack)
 └── actas/
 ```
 
-**Fases:** 0 Inventario (✅ hecho) → 1 Áreas A–F → 2 Recorridos 1–4 → 3 Matriz+bloqueos → 4 Plan →
-5 Consolidación y voto.
+**Fases:** 0 Inventario (✅) → 1 Áreas A–F (✅) → 2 Recorridos 1–4 (✅) → 3 Matriz+bloqueos (✅) →
+4 Plan (✅) → 5 Consolidación y voto (✅, rondas 12–13).
+**Publicación: BLOQUEADA — SSH GitHub "Permission denied (publickey)".**
 
 **Regla anti-pérdida:** toda afirmación va ligada a un SHA + archivo + evidencia, o a `NO VERIFICADO`.
 
