@@ -1,8 +1,8 @@
 # Anexo D — Experiencia de Cliente y Comportamiento de Liloo
 ## Anexo de "Kaenori Experience v1.3" · Diseño de experiencia (A0)
 
-**Fecha:** 2026-11-04 · **Estado:** propuesta para concilio (A0). No autoriza implementación, pruebas
-físicas ni despliegues.
+**Fecha:** 2026-11-04 · **Estado:** consolidado (A0), pendiente de aprobación del propietario. No
+autoriza implementación, pruebas físicas ni despliegues.
 **Relación:** describe **cómo se siente y se comporta** Kaenori para el cliente. El **cómo funciona**
 vive en V1.2 (§3–§10) y en el Anexo A (Opportunities). Este anexo no añade capacidades; si una
 experiencia necesita algo no contemplado, se marca como **dependencia** (§5), no se da por aprobado.
@@ -20,9 +20,9 @@ experiencia necesita algo no contemplado, se marca como **dependencia** (§5), n
 5. **Respeto a los invariantes de V1.2:** Override, CCR, kill-switch local, permisos, privacidad
    (Nivel 0/1/2), ejecución local, Life Safety supremo.
 6. **La interpretación de una frase por el LLM no equivale a consentimiento** de una acción física.
-7. **Voz y micrófono siguen la política de datos:** Nivel 0 = micrófono apagado por defecto; Nivel 1 =
-   wake word local; Nivel 2 = ampliado, con indicador visible de escucha y sin grabación persistente no
-   autorizada.
+7. **Modos de escucha (independientes de los Niveles de datos 0/1/2 de V1.2 §3):** micrófono apagado
+   por defecto · **wake word local** (activación voluntaria) · escucha ampliada (activación voluntaria),
+   con indicador visible de escucha y sin grabación persistente no autorizada.
 
 ---
 
@@ -45,14 +45,14 @@ bienvenida hablada, no un panel técnico.
 3. **Organizar y conectar** — intervención mínima: *«He identificado un sistema de climatización.
    ¿Controla toda la vivienda o una planta?»*. Si hace falta código/credencial/acción física, Liloo
    **abre el conector seguro** (nunca por chat/voz).
-4. **Primer valor (solo-lectura)** — *«Ya puedo consultar la temperatura del salón. ¿Quieres
+4. **Primer valor (solo-lectura, con lectura ya autorizada)** — *«Ya puedo consultar la temperatura del salón. ¿Quieres
    comprobarlo conmigo?»* Sin dispositivo útil, no simula: ofrece diagnóstico y vía de recuperación.
 5. **Aprender límites** — permisos comprensibles: temperaturas, horarios, habitaciones, habitantes.
 6. **Empezar a trabajar** — transición al dashboard con lo aprendido y las primeras oportunidades.
 
-**Permiso necesario:** consentimiento del escaneo (red local) en la etapa 2; consentimientos de
-lectura/control por separado en la etapa 5. **El Wizard puede finalizarse con un único sistema útil
-conectado.**
+**Permiso necesario:** consentimiento del escaneo (red local) en la etapa 2; **consentimiento de
+lectura antes de demostrar** (etapa 3, al conectar); permisos de **actuación** en la etapa 5. **El
+Wizard puede finalizarse con un único sistema útil conectado.**
 
 **Excepción:** escaneo sin hallazgos o dispositivos no conectables → Liloo lo dice con honestidad y
 ofrece la vía manual. Credenciales requeridas → delega al conector seguro.
@@ -79,8 +79,9 @@ resultados** siempre accesibles.
 - **Presencia persistente:** Liloo está disponible en voz y texto; no interrumpe salvo que aporte.
 - **Información contextual:** la pantalla se ordena según lo relevante para cada hogar, de forma
   explicable y editable.
-- **Continuidad:** la conversación se conserva al cambiar de pantalla o dispositivo (móvil / tablet /
-  mural).
+- **Continuidad:** la conversación se conserva al cambiar de pantalla o dispositivo, **por usuario
+  autenticado**; los dispositivos compartidos (mural) **no muestran historiales personales por defecto**
+  (modo invitado/hogar).
 - **Priorización y atención selectiva:** distingue **consulta** (responde), **recomendación** (propone),
   **alerta** (avisa de algo relevante o crítico) y **actuación** (solo con permiso vigente). Las alertas
   de **Life Safety** nunca se silencian; el resto respeta las horas de silencio y preferencias de notificación del cliente.
@@ -185,7 +186,7 @@ expectativas.
 
 | Situación | Qué dice/muestra Liloo |
 |---|---|
-| **Se corta Internet** | Aviso garantizado por **estado visual local / mensaje predefinido en el borde** (sin depender de conversación generativa en la nube): *«He perdido la conexión. Las funciones locales y tus protecciones siguen activas; lo que dependa de la nube quedará en pausa y se recuperará solo.»* |
+| **Se corta Internet** | Aviso garantizado por **estado visual local / mensaje predefinido en el borde** (sin depender de conversación generativa en la nube): *«He perdido la conexión. Las funciones locales y tus protecciones siguen activas; lo que dependa de la nube quedará en pausa; te confirmaré la recuperación cuando la conexión y sus condiciones estén verificadas.»* |
 | **Un dispositivo deja de responder** | *«El termostato del salón no responde desde hace un rato. No voy a insistir ni a dar órdenes a ciegas.»* |
 | **Liloo no sabe la respuesta** | *«No tengo un dato fiable para eso. Puedo consultarlo si me autorizas, o te indico cómo verlo tú.»* |
 | **Recomendación incorrecta** | *«Me equivoqué en esta propuesta: el supuesto X no se cumplió. La retiro y descarto ese supuesto para futuras estimaciones.»* |
@@ -196,7 +197,8 @@ expectativas.
 
 **Reglas:** distinguir **detener órdenes nuevas** de **recuperar un dispositivo ya ordenado**
 (kill-switch local, Anexo A §7); respetar CCR (Clase A/B); nunca convertir un resultado incompleto en
-éxito.
+éxito. Liloo comunica **qué parte de la recuperación ha verificado** y qué no puede garantizar si el
+dispositivo quedó desconectado («Revertir» o kill-switch no garantizan el retorno físico).
 
 **Satisfacción:** el cliente entiende qué pasó, qué incertidumbre hay y conserva el control, incluso en
 el fallo.

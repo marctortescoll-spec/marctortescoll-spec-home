@@ -1,5 +1,5 @@
 # Anexo B — Registro de decisiones del concilio
-## Consolidado · Anexo de "Kaenori Experience v1.2" · 2026-11-04
+## Consolidado · Anexo de "Kaenori Experience v1.3" · 2026-11-04
 
 **Naturaleza:** registro único y cronológico de las decisiones del concilio (DeepSeek + GPT-5 +
 Argon). Sustituye a los dictámenes sueltos de las rondas 4–9, que quedan como histórico.
@@ -57,6 +57,14 @@ Argon). Sustituye a los dictámenes sueltos de las rondas 4–9, que quedan como
   explícita al traducir lenguaje natural a límites · dependencias añadidas: identidad/rol en canales
   compartidos, ontología para "agrupados por función", auditoría/aviso cuando un Habitante pausa o
   cancela una prueba.
+
+## Ronda 10 — Validación de los 5 ajustes finales sobre V1.3 (2026-11-04)
+
+- **Veredicto:** aprueba congelación (GPT-5 y Argon), condicionada a aplicar los 5 ajustes.
+- **5 ajustes validados (de acuerdo):** lectura antes de la etapa 4 · separar datos/modos de escucha ·
+  no prometer «se recuperará solo» · continuidad por usuario autenticado · editorial V1.3.
+- **Ajustes aplicados** al Anexo D y al Anexo B (referencia a V1.3). Nota Anexo A: «Revertir»/kill-switch
+  no garantiza retorno físico; Liloo comunica qué parte verificó.
 
 ## Decisiones finales consolidadas (las 12 modificaciones)
 

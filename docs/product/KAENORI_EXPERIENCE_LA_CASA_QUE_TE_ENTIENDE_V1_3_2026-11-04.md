@@ -13,7 +13,7 @@ físicas ni despliegues.
 |---|---|
 | **Rector (único vivo)** | **Este documento** — Kaenori Experience v1.3 |
 | **Anexo A** | `KAENORI_LILOO_OPPORTUNITIES_V1_2` — especificación funcional de la tarjeta de Oportunidades (vigente) |
-| **Anexo B** | `REGISTRO_DECISIONES_CONCILIO` — decisiones del concilio (rondas 4–9) |
+| **Anexo B** | `REGISTRO_DECISIONES_CONCILIO` — decisiones del concilio (rondas 4–10) |
 | **Anexo C** | `MATRIZ_TRAZABILIDAD` — capacidad → módulo → código → test → evidencia → estado (implementado / parcial / pendiente / bloqueado) (vigente) |
 | **Anexo D** | `KAENORI_LILOO_EXPERIENCIA_CLIENTE_V1_3` — Experiencia de Cliente y Comportamiento de Liloo |
 | **Histórico (no se edita)** | Experience v1.1/v1.2 · Opportunities v1.1 · Resumen v1/v2 · Revisión estratégica · Wizard Funcional v1 · Síntesis R1/R2 |
