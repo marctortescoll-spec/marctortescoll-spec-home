@@ -5,7 +5,7 @@
 
 ## Rectificaciones
 
-Se confirman las 9 rectificaciones de `RECTIFICACIONES_R14.md`, incluidas:
+Se confirman las 10 rectificaciones de `RECTIFICACIONES_R14.md`, incluidas:
 
 - backup puede declarar OK un archivo incompleto (`backup.sh` oculta fallo de `tar`);
 - 180 ficheros (no 203) y **2533 casos**; CI solo ejecuta **1569** (38,1 % fuera);
@@ -36,3 +36,19 @@ Se confirman las 9 rectificaciones de `RECTIFICACIONES_R14.md`, incluidas:
 - Rectificaciones publicadas en rama documental.
 - Ninguna actuación física, despliegue ni cambio de permisos.
 - Sin A3.
+
+## Aclaraciones finales del Owner (R14 cerrada como auditoría)
+
+1. **CI**: 2533 son casos *recopilados*, no superados. En `549700b9` el CI real
+   da **1 failed, 1563 passed, 5 skipped, 71 subtests**; `tests/synthetic` queda
+   fuera (18 recopilados + 3 errores). El fallo es `test_s11_read_only_ready_gate`.
+2. **Egress**: la unidad `kaenori-egress.service` está **enabled/active** en
+   HOME0001 (`WantedBy=multi-user.target`). No se puede afirmar categóricamente
+   que no se recupera tras reboot; queda **no verificado** si la tabla nftables
+   está presente y es efectiva (sin root no se puede listar). Stop sigue siendo
+   fail-open; no hay snapshot/rollback.
+3. **Pilotos**: separar **solo lectura** (sin CCR) de **control físico** (CCR,
+   safe-stop, verificación por atributo y A3).
+
+**Estado:** R14 cerrada como auditoría técnica. **No autoriza desarrollo,
+despliegue ni actuación.** Producción sigue bloqueada.

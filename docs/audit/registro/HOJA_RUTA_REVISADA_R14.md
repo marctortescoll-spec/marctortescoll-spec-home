@@ -18,14 +18,21 @@
 | Paso | Acción | Dependencia |
 |---|---|---|
 | 1 | Backup fail-closed + test de fallo | — |
-| 2 | CI completo (2533 casos + shell) | 1 |
+| 2 | CI verde real: 2533 casos recopilados (no “superados”) + 5 shell tests; corregir el fallo S11 | 1 |
 | 3 | CCR Clase A/B + safe-stop acotado | decisión R14 |
 | 4 | Verificación por atributo en actuación | 3 |
-| 5 | Egress enforcement verificado + rollback/persistencia | A3 |
+| 5 | Egress: comprobar enable/arranque, rollback y persistencia | A3 |
 | 6 | Override + Oportunidades | 3–4 |
 | 7 | Consolidar EMS + proyección 12→5 | — |
-| 8 | Piloto energético | 1–7 |
+| 8a | **Piloto solo lectura** (sin CCR) | 1–2 |
+| 8b | **Piloto con control físico** (CCR/safe-stop/verificación/A3) | 1–7 |
 
 **Desacuerdo registrado:** Argon prioriza entorno/instalación; GPT/orquestador
 priorizan CCR. Se resuelve con backup+CI como P0-paso-1 y CCR como P0-paso-3;
 ambos son bloqueantes antes de actuación.
+
+## Aclaración de alcance
+
+El piloto solo lectura no demuestra CCR ni actuación; el piloto con control físico
+es un bloque distinto y requiere todas las garantías previas. No se autoriza
+ninguno de los dos en R14.
