@@ -23,7 +23,7 @@
 - **Vigencia:** limitada a una ejecución y cierre del despliegue P0; revocable en cualquier momento. La aceptación definitiva del P0 requiere la prueba del OWNER desde el navegador.
 - **Presupuesto:** sin ampliación de gasto; se mantienen los límites/ledger ya vigentes.
 
-**Estado del grant:** autorización OWNER registrada. La ejecución sigue condicionada a validación operativa del Control Plane y a los gates; este registro documental no acredita por sí solo despliegue ni validación técnica.
+**Estado del grant A3 P0:** **UTILIZADO / CONSUMIDO** — despliegue técnico ejecutado sobre HOME0001 a `644cd4e` con backup verificado, cinco servicios activos y recuperación disponible. Validación operativa de operaciones+SHA realizada; la revisión independiente de `07-auditor` y la aceptación real del OWNER siguen pendientes. **No autoriza repetir la operación ni otros SHA.** Evidencias: [CIERRE_EJECUCION_A3_P0_644cd4e_HOME0001.md](../CIERRE_EJECUCION_A3_P0_644cd4e_HOME0001.md).
 
 ## Límites generales duros
 
